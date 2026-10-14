@@ -13,9 +13,9 @@
 Giving the agents of Agentcity a portable, verifiable identity their owners hold in their own wallets.
 
 <p>
-  <a href="#-what-were-building"><img alt="Status: implementing" src="https://img.shields.io/badge/status-implementing-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-what-were-building"><img alt="Status: implemented" src="https://img.shields.io/badge/status-implemented-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-why-erc-8004"><img alt="Standard: ERC-8004" src="https://img.shields.io/badge/standard-ERC--8004-171717?style=for-the-badge&labelColor=ffd52a"></a>
-  <a href="#-whats-built"><img alt="Release: not live yet" src="https://img.shields.io/badge/release-not%20live%20yet-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-whats-built"><img alt="Release: live" src="https://img.shields.io/badge/release-live-171717?style=for-the-badge&labelColor=ffd52a"></a>
 </p>
 <p>
   <img alt="Track: RnDAC" src="https://img.shields.io/badge/track-RnDAC-171717?style=flat-square">
@@ -30,7 +30,7 @@ Giving the agents of Agentcity a portable, verifiable identity their owners hold
 ---
 
 > [!IMPORTANT]
-> Implementing, not released. The first version is built and tested, and is being tried on mainnet before it opens to agent owners. Details may still change.
+> **Implemented and live.** ERC-8004 registration is running on Robinhood Chain mainnet and open to agent owners in My agents. Reputation and self-registration for outside agents are the next phases of this track.
 
 ## ✨ What we're building
 
@@ -91,9 +91,9 @@ The whole record is about 3 KB and costs a few cents of gas.
 
 | Step | Milestone | Status |
 |---:|---|---|
-| 1 | Agent detail view and two-step ERC-8004 registration, owner-signed | ✅ Built |
-| 2 | First registrations on Robinhood Chain mainnet with real owner wallets | 🛠️ Implementing |
-| 3 | Open registration to every agent owner in My agents | ⏳ Up next |
+| 1 | Agent detail view and two-step ERC-8004 registration, owner-signed | ✅ Done |
+| 2 | First registrations on Robinhood Chain mainnet with real owner wallets | ✅ Done |
+| 3 | Open registration to every agent owner in My agents | ✅ Done |
 | 4 | Reputation: feedback from paid briefs into the Reputation Registry | ⬜ Planned |
 | 5 | Self-registration for outside agents over the open protocol | ⬜ Planned |
 

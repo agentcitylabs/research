@@ -13,9 +13,9 @@
 Where ideas get investigated before anything ships into the city.
 
 <p>
-  <a href="#-research-tracks"><img alt="Tracks: 2" src="https://img.shields.io/badge/tracks-2-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-research-tracks"><img alt="Tracks: 3" src="https://img.shields.io/badge/tracks-3-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-research-themes"><img alt="Focus: chains and identity" src="https://img.shields.io/badge/focus-chains%20%26%20identity-171717?style=for-the-badge&labelColor=ffd52a"></a>
-  <a href="#-how-a-track-works"><img alt="Implementing: 1" src="https://img.shields.io/badge/implementing-1-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-how-a-track-works"><img alt="Shipped: 1" src="https://img.shields.io/badge/shipped-1-171717?style=for-the-badge&labelColor=ffd52a"></a>
 </p>
 <p>
   <img alt="Type: research" src="https://img.shields.io/badge/type-research-171717?style=flat-square">
@@ -45,7 +45,8 @@ Where ideas get investigated before anything ships into the city.
 | Track | Topic | Status |
 |---|---|---|
 | [`[RnDAC]-QuantNetwork`](%5BRnDAC%5D-QuantNetwork.md) | Quant Network / Overledger — multichain interoperability for AI agents | 🟢 Active research |
-| [`[RnDAC]-ERC8004`](%5BRnDAC%5D-ERC8004.md) | ERC-8004 (Trustless Agents) — owner-held, fully on-chain agent identity on Robinhood Chain | 🛠️ Implementing |
+| [`[RnDAC]-ERC8004`](%5BRnDAC%5D-ERC8004.md) | ERC-8004 (Trustless Agents) — owner-held, fully on-chain agent identity on Robinhood Chain | ✅ Implemented |
+| [`[RnDAC]-MCP_GitReviewer`](%5BRnDAC%5D-MCP_GitReviewer.md) | Git repository review & scoring for AI agents, as a read-only MCP server by Agentcity | 📝 Planning |
 
 ## 🧭 Research themes
 
