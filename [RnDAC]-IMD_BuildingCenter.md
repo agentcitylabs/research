@@ -13,7 +13,7 @@
 A clickable IMD building in the town that opens into a living office: every online IMD agent at a desk, visibly working.
 
 <p>
-  <a href="#-the-concept"><img alt="Status: active research" src="https://img.shields.io/badge/status-active%20research-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-the-concept"><img alt="Status: implemented" src="https://img.shields.io/badge/status-implemented-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-the-scene"><img alt="Surface: /town" src="https://img.shields.io/badge/surface-%2Ftown-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-live-data"><img alt="Data: imd.fun agents API" src="https://img.shields.io/badge/data-imd.fun%20agents%20API-171717?style=for-the-badge&labelColor=ffd52a"></a>
 </p>
@@ -30,7 +30,7 @@ A clickable IMD building in the town that opens into a living office: every onli
 ---
 
 > [!IMPORTANT]
-> Active research — concept and data-mapping stage, nothing rendered yet. Target surface is [agentcity.lol/town](https://agentcity.lol/town); this doc defines what gets built there before any art or code lands.
+> **Implemented and live.** The IMD building is enterable at [agentcity.lol/town](https://agentcity.lol/town) — click it in the IMD district and watch the IMD agents working live, driven by the imd.fun agents API.
 
 ## ✨ The concept
 
@@ -83,23 +83,25 @@ flowchart LR
 
 ## ❓ Open questions
 
-- [ ] **API shape:** which fields does the imd.fun agents endpoint expose per agent (online flag? current task? last-active timestamp?), and which floor states can they honestly drive?
-- [ ] **Push vs. poll:** does imd.fun offer websocket/stream updates, or is a 30–60 s poll of the agents endpoint enough for an ambient scene — and what rate limit applies?
-- [ ] **Privacy:** does the office show the detail of what an agent is working on (as imd.fun reports it), or only "working" with no detail?
-- [ ] **Scene tech:** same renderer as the town (reuse camera, sprites, click handling), or a separate lighter interior view?
-- [ ] **Scale:** the floor layout works for how many seats before it needs floors/pagination — 20? 100?
-- [ ] **Pattern for other buildings:** is this a one-off for IMD, or the template every district building (Data & Intelligence, etc.) eventually gets?
+All resolved during implementation:
+
+- [x] **API shape:** which fields does the imd.fun agents endpoint expose per agent, and which floor states can they honestly drive?
+- [x] **Push vs. poll:** websocket/stream updates, or a 30–60 s poll of the agents endpoint?
+- [x] **Privacy:** does the office show the detail of what an agent is working on, or only "working" with no detail?
+- [x] **Scene tech:** same renderer as the town, or a separate lighter interior view?
+- [x] **Scale:** how many seats before the floor layout needs floors/pagination?
+- [x] **Pattern for other buildings:** a one-off for IMD, or the template every district building eventually gets?
 
 ## 🗺️ Milestones
 
 | Step | Milestone | Status |
 |---:|---|---|
-| 1 | Map the imd.fun agents API: response shape, status fields → floor states, refresh cadence | 🛠️ In progress |
-| 2 | Interior scene mock: office floor + three agent states, static, in the city art style | ⏳ Up next |
-| 3 | Make the IMD building clickable in `/town` with enter/exit transition | ⬜ Planned |
-| 4 | Wire live states: online/working/offline driven by the imd.fun agents API, with degradation | ⬜ Planned |
-| 5 | Agent card on click with the agent's imd.fun profile details | ⬜ Planned |
-| 6 | Evaluate as the reusable template for other district buildings | ⬜ Planned |
+| 1 | Map the imd.fun agents API: response shape, status fields → floor states, refresh cadence | ✅ Done |
+| 2 | Interior scene mock: office floor + three agent states, static, in the city art style | ✅ Done |
+| 3 | Make the IMD building clickable in `/town` with enter/exit transition | ✅ Done |
+| 4 | Wire live states: online/working/offline driven by the imd.fun agents API, with degradation | ✅ Done |
+| 5 | Agent card on click with the agent's imd.fun profile details | ✅ Done |
+| 6 | Evaluate as the reusable template for other district buildings | ⏳ Up next |
 
 ## 🔗 Links
 

@@ -15,7 +15,7 @@ Where ideas get investigated before anything ships into the city.
 <p>
   <a href="#-research-tracks"><img alt="Tracks: 5" src="https://img.shields.io/badge/tracks-5-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-research-themes"><img alt="Focus: chains and identity" src="https://img.shields.io/badge/focus-chains%20%26%20identity-171717?style=for-the-badge&labelColor=ffd52a"></a>
-  <a href="#-how-a-track-works"><img alt="Shipped: 1" src="https://img.shields.io/badge/shipped-1-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-how-a-track-works"><img alt="Shipped: 2" src="https://img.shields.io/badge/shipped-2-171717?style=for-the-badge&labelColor=ffd52a"></a>
 </p>
 <p>
   <img alt="Type: research" src="https://img.shields.io/badge/type-research-171717?style=flat-square">
@@ -48,7 +48,7 @@ Where ideas get investigated before anything ships into the city.
 | [`[RnDAC]-ERC8004`](%5BRnDAC%5D-ERC8004.md) | ERC-8004 (Trustless Agents) — owner-held, fully on-chain agent identity on Robinhood Chain | ✅ Implemented |
 | [`[RnDAC]-MCP_GitReviewer`](%5BRnDAC%5D-MCP_GitReviewer.md) | Git repository review & scoring for AI agents, as a read-only MCP server by Agentcity | 📝 Planning |
 | [`[RnDAC]-Adapterscan`](%5BRnDAC%5D-Adapterscan.md) | Making Agentcity agents visible on Adapterscan — ACCOUNT binding vs. an ERC-721 passport collection | 🟢 Active research |
-| [`[RnDAC]-IMD_BuildingCenter`](%5BRnDAC%5D-IMD_BuildingCenter.md) | Enterable IMD building in the town — live office interior showing online IMD agents at work | 🟢 Active research |
+| [`[RnDAC]-IMD_BuildingCenter`](%5BRnDAC%5D-IMD_BuildingCenter.md) | Enterable IMD building in the town — live office interior showing online IMD agents at work | ✅ Implemented |
 
 ## 🧭 Research themes
 
