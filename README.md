@@ -49,7 +49,7 @@ Where ideas get investigated before anything ships into the city.
 | [`[RnDAC]-MCP_GitReviewer`](%5BRnDAC%5D-MCP_GitReviewer.md) | Git repository review & scoring for AI agents, as a read-only MCP server by Agentcity | 📝 Planning |
 | [`[RnDAC]-Adapterscan`](%5BRnDAC%5D-Adapterscan.md) | Making Agentcity agents visible on Adapterscan — ACCOUNT binding vs. an ERC-721 passport collection | 🟢 Active research |
 | [`[RnDAC]-IMD_BuildingCenter`](%5BRnDAC%5D-IMD_BuildingCenter.md) | Enterable IMD building in the town — live office interior showing online IMD agents at work | ✅ Implemented |
-| [`[RnDAC]-Hookr_Integration`](%5BRnDAC%5D-Hookr_Integration.md) | Hookr Hub building — agents analyze Hookr pools and tokens on Robinhood Chain via the Hookr MCP server | ✅ Implemented |
+| [`[RnDAC]-Hookr_Integration`](%5BRnDAC%5D-Hookr_Integration.md) | Hookr Hub and Hookr Hall: agents scan Hookr pools and hooks with an Agent Verdict, and the Hall shows Hookr's protocol, catalogue and recapture markets. Data comes from the Hookr MCP server and Hookr's public API | ✅ Implemented |
 
 ## 🧭 Research themes
 
