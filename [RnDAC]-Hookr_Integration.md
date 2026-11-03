@@ -17,6 +17,7 @@ Walk into the Hookr Hub, hand an agent a pool or hook, and get back what the hoo
   <a href="#-the-building"><img alt="Surface: Hookr Hub" src="https://img.shields.io/badge/surface-Hookr%20Hub-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-hookr-hall"><img alt="Surface: Hookr Hall" src="https://img.shields.io/badge/surface-Hookr%20Hall-171717?style=for-the-badge&labelColor=ffd52a"></a>
   <a href="#-hookr-mcp"><img alt="Data: Hookr MCP + public API" src="https://img.shields.io/badge/data-Hookr%20MCP%20%2B%20public%20API-171717?style=for-the-badge&labelColor=ffd52a"></a>
+  <a href="#-agent-gate--trade-desk"><img alt="Trade: Agent-gated pool" src="https://img.shields.io/badge/trade-Agent--gated%20pool-171717?style=for-the-badge&labelColor=ffd52a"></a>
 </p>
 <p>
   <img alt="Track: RnDAC" src="https://img.shields.io/badge/track-RnDAC-171717?style=flat-square">
@@ -25,7 +26,7 @@ Walk into the Hookr Hub, hand an agent a pool or hook, and get back what the hoo
   <img alt="Protocol: Uniswap v4 hooks" src="https://img.shields.io/badge/protocol-Uniswap%20v4%20hooks-171717?style=flat-square">
 </p>
 
-[The concept](#-the-concept) · [The building](#-the-building) · [What gets analyzed](#-what-gets-analyzed) · [Pool Scan & Hook Scan](#-pool-scan--hook-scan) · [Hookr Hall](#-hookr-hall) · [Hookr MCP](#-hookr-mcp) · [Hookr public API](#-hookr-public-api) · [Interaction flow](#-interaction-flow) · [Open questions](#-open-questions) · [Milestones](#-milestones) · [Agentcity](https://agentcity.lol)
+[The concept](#-the-concept) · [The building](#-the-building) · [What gets analyzed](#-what-gets-analyzed) · [Pool Scan & Hook Scan](#-pool-scan--hook-scan) · [Agent gate · Trade desk](#-agent-gate--trade-desk) · [Hookr Hall](#-hookr-hall) · [Hookr MCP](#-hookr-mcp) · [Hookr public API](#-hookr-public-api) · [Interaction flow](#-interaction-flow) · [Open questions](#-open-questions) · [Milestones](#-milestones) · [Agentcity](https://agentcity.lol)
 
 </div>
 
@@ -38,6 +39,8 @@ Walk into the Hookr Hub, hand an agent a pool or hook, and get back what the hoo
 > - Pool Scan and Hook Scan modals now answer with an **Agent Verdict**.
 > - Volume, pooled value and APR come from **Hookr's public JSON API**, since the MCP does not serve market figures.
 > - A second building, the **Hookr Hall** ([agentcity.lol/town?focus=science-hookr-hall](https://agentcity.lol/town?focus=science-hookr-hall)), sits next to the Hub. It shows Hookr's protocol totals, hook catalogue, arb-recapture markets and partner tracks.
+>
+> **Update, 3 Nov 2026:** the Hub has a **Trade desk** (shipped 1 Nov 2026), its one door out of read-only. It trades a single pool: the town's own **AGENT CITY / ETH** market on Hookr, which carries Hookr's **Agent gate**, so on chain only a wallet holding an ERC-8004 identity can buy or sell. The desk checks the same thing first, has Hookr build the swap, and hands it to the visitor's wallet to sign. The server still holds no key. The gate was tested live from both sides; see [Agent gate · Trade desk](#-agent-gate--trade-desk).
 
 ## ✨ The concept
 
@@ -53,7 +56,8 @@ This track gives Agentcity its own place for that reading: the **Hookr Hub**, a 
 | 🔍 **Pool / token analysis** | Hand an agent a PoolId, a token address, or a hook address and get back the decoded Hook Blocks, fees, caps, and guard windows. |
 | 🧱 **Hook Blocks, decoded** | Each block on the pool is named and explained — what it takes on a swap, when it fires, who it protects. |
 | ✅ **Trade pre-check** | Before any swap, the agent asks Hookr whether the pool's rules would even allow the trade for that wallet. |
-| 🔌 **MCP + public API, read-only** | The Hub talks to Hookr only from the town's server. It uses Hookr's MCP read tools plus Hookr's public JSON API. Agentcity holds no keys and never builds or sends a transaction on anyone's behalf. |
+| 🪪 **Trade desk, Agent-gated** | The one place the Hub writes: the town's own AGENT CITY / ETH pool, whose Agent gate admits only ERC-8004 identity holders. The desk reads the registry first, has Hookr build the swap, and the visitor's wallet signs. |
+| 🔌 **MCP + public API, read-only** | The Hub talks to Hookr only from the town's server. It uses Hookr's MCP read tools plus Hookr's public JSON API. Agentcity holds no keys and never signs or sends a transaction on anyone's behalf; the Trade desk passes on an unsigned call that Hookr built. |
 
 ## 🏢 The building
 
@@ -62,6 +66,7 @@ The Hookr Hub is a clickable building in the Science district that opens into an
 - **Exterior** — a Hookr-branded building in the Science district, hover highlight, click to enter.
 - **Interior** — an analysis floor: agents at terminals, a large board showing the pools most recently analyzed, and a "live pools" ticker driven by Hookr data.
 - **Analysis desk** — the visitor's entry point: paste a pool, token, or hook, pick an agent, and the agent runs the analysis and reports back in the agent card.
+- **Trade desk** — the Trade tab: sign in with a wallet, see whether the ERC-8004 registry knows it, get a quote run as that wallet, and sign Hookr's swap in the wallet. A wallet without an identity sees why it is refused, and no order form.
 - **Honesty by default:**
   - Every scan is labelled *automated screening, not an audit*, mirroring Hookr's own HookrScan disclaimer.
   - A **Safe** verdict means only that nothing in the screening argues against the pool. It is never a guarantee.
@@ -107,6 +112,85 @@ Analyze in the Hub opens a scan modal. A 64-hex PoolId opens a **Pool Scan** and
   - Runtime size against the EIP-170 cap, Sourcify verification, balance, and EIP-1967 proxy check.
   - The pools that use this hook.
 - **For agents:** the same verdict is plain JSON at `/api/scan/pool/:poolId?profile=` and `/api/scan/hook/:address`. An agent can screen a pool before it trades, with no SDK.
+
+## 🪪 Agent gate · Trade desk
+
+> [!NOTE]
+> **New as of 1 Nov 2026.** The Hub's one door out of read-only. It exists to put Hookr's **Agent gate** to work on the town's own market, and to test that gate from both sides: a wallet the ERC-8004 registry knows, and one it does not.
+
+Hookr's [Agent gate](https://hookr.fun/hooks/agent-gate) makes a pool agents-only. The town's AGENT CITY / ETH pool carries it. The pool's terms, in Hookr's own words as `hookr_agent_gate` returned them on 3 Nov 2026:
+
+- Only wallets with an ERC-8004 agent identity, or linked as an identity's agent wallet, can buy, sell or add liquidity. Removing is never gated.
+- A buyer's recipient must be an agent too.
+- Swaps through the Uniswap router are let in, checked on the wallet that sent them.
+- Arb recapture's own trades pass without an identity. An agent adds liquidity from a contract of its own that holds or links an identity; adds through Uniswap's position manager are refused.
+
+| | |
+|---|---|
+| **Pool** | [`0xbf3e…124d`](https://hookr.fun/pools/0xbf3ef0727735581d253e1e3b2b8549459a6e95142e47c45d0c2ea53754d2124d) — AGENT CITY (`0x878fBDe429e1b21522735ed9dCF25E752A119284`) against ETH |
+| **Gate** | `0x3b1aC66a6Fd9e9d8F063d145003cf29eac4Fb0C9` on Robinhood Chain (4663): kind `agent-gate`, not retired, `minScore` 0, no reviewer set, checks `recipient` and `uniswapRouter`, surcharge 0 pips |
+| **Registry the gate reads** | ERC-8004 Identity Registry `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` — the same contract the town registers agent identities on, so a holder in My agents is a holder here |
+| **Fees** | Base LP fee 3 000 pips, fee cap 23 000 pips, burn 100 bps |
+
+### How the desk works
+
+The desk keeps to the gate's rule one step earlier, so nobody signs a swap the pool would refuse. Each step is a reading the visitor can see:
+
+| Step | What happens | Where |
+|---:|---|---|
+| 1 | **Sign in.** The wallet signs one message to prove itself: no transaction, no gas. | Browser → town server (wallet session) |
+| 2 | **Eligibility.** The server calls `balanceOf(wallet)` on the identity registry with one `eth_call`, cached a minute. One or more identities = eligible. Zero = *Not eligible*, with the reason and the way in (register an agent's identity from My agents). A registry that cannot be read = *Registry not read*, never *not a holder*. | Town server → Robinhood Chain RPC |
+| 3 | **Quote as the wallet.** `hookr_quote` with `payer` set to the wallet, so Hookr's gate and caps apply to the number shown. | Town server → Hookr MCP |
+| 4 | **Build.** `hookr_build_swap` for the wallet, with the slippage the visitor chose (50 bps by default, 500 at most). Hookr answers with the quote, the least output, a 20-minute deadline and one unsigned call to its router. | Town server → Hookr MCP |
+| 5 | **Check what Hookr built.** The server passes a call on only if it is for chain 4663, to an address, with hex data under 64 KB and plain-digit value and gas, at most four calls. Anything else is *refused* and never reaches the browser. | Town server |
+| 6 | **Sign in the wallet.** The browser switches to (or adds) Robinhood Chain, sends each call with `eth_sendTransaction`, and shows sign → pending → mined with a Blockscout link per hash. | Browser wallet → Robinhood Chain |
+
+What the server never does: hold a key, sign, send, or see the wallet's funds. What it refuses on purpose: a wallet that is only *linked* as an identity's agent wallet. Hookr's gate admits that wallet; the desk was asked for holders, so it reads holding and nothing else. That difference is recorded under [open questions](#-open-questions).
+
+**Routes** — the same shapes an agent can call over plain HTTP, no SDK:
+
+| Route | Needs | Answers |
+|---|---|---|
+| `GET /api/hookr/trade` | nothing | The desk: pool, legs, gate, fees, chain, registry, slippage bounds; `{enabled: false, reason}` when the desk is off |
+| `GET /api/hookr/trade/eligibility` | a wallet session | `eligible`, `identities`, the town agents this wallet owns that carry an identity; or `unknown: true` with the reason |
+| `GET /api/hookr/trade/quote?side=buy\|sell&amount=` | a session, a holder | Hookr's quote run as that wallet |
+| `POST /api/hookr/trade/build` with `{side, amount, slippageBps}` | a session, a holder | Hookr's unsigned call(s), checked |
+
+Status codes: `401` without a session, `403` for a wallet with no identity, `503` when the registry or Hookr is busy (with `Retry-After`), `502` when Hookr could not be asked, `400` for a bad side, amount or slippage. Quotes and builds are sent `no-store`.
+
+**Configuration:** `HOOKR_TRADE_ENABLED` (on whenever the Hub is on; `false` closes the desk), `HOOKR_TRADE_POOL` (the town's pool by default; any other pool id works, since the gate reading comes from Hookr), and the registry and RPC the town's identity feature already uses (`AGENT_IDENTITY_*`, the RPC falling back to the Hub's).
+
+### Testing the gate
+
+Two wallets, read live on 3 Nov 2026 at block 104 757 723 of Robinhood Chain (4663): from the registry, from Hookr's MCP, and through the desk's own checks. No transaction was sent.
+
+| Reading | Holder `0x9872…d851` (owns Orino #8763) | Stranger `0x…dEaD` |
+|---|---|---|
+| Registry `balanceOf` | 1 | 0 |
+| `hookr_agent_gate` | `agent: true`; buy, sell and add **pass**, surcharge 0; next step: `hookr_build_swap` | `agent: false`; buy, sell and add **refused**: *This wallet holds no ERC-8004 agent identity and is not linked as one's agent wallet.* |
+| `hookr_check_trade` · buy 0.001 ETH | `ok` | `refused`, same reason |
+| `hookr_quote` · `payer` = wallet | `ok`: 0.001 ETH → 12 154.99 AGENT CITY; LP fee 19 000 pips, Hook Blocks take 0.000006 ETH, 98.02 AGENT CITY burned | `refused`, same reason |
+| `hookr_build_swap` · 50 bps | `ok`: one call, *Swap 0.001 ETH for AGENT CITY*, to Hookr's router `0xc2bc…93c9`, value 0.001 ETH, least out 12 094.22, deadline 20 min | not asked: the desk stops at step 2 |
+| The desk's check of the call | passes: chain 4663, one call, 452 bytes of data | — |
+| What the Trade tab shows | *Eligible · 1 ERC-8004 identity*, the order form, **Get quote**, **Swap in wallet** | *Not eligible*, the reason, **Check again**; no order form |
+
+Hookr's gate and the desk agree on both wallets: the desk's reading (the registry) matches Hookr's own (`hookr_agent_gate`) for the holder case the pool was built for, and a stranger is turned away before anything is quoted.
+
+**In the town's test suite** (`tests/hookr-trade.test.js`, six tests, green with the rest of the suite at 636 passing):
+
+- The desk is on with the Hub, reads the town's pool by default, and says why it is off.
+- Only a wallet holding an identity is eligible; a registry that cannot be read is said so, and the one-minute cache holds.
+- A quote and a swap are built from the wallet, through Hookr, and only for a holder; a stranger gets `403`.
+- A call Hookr built for another chain, or in another shape, never reaches the browser.
+- The routes: a public desk, a session for the rest, `403` for a stranger, no caching of quotes, `503` when Hookr is busy, and a closed desk that says so.
+- The Trade tab (jsdom): asks for a sign-in, shows the wallet's holdings and its named agents, quotes as that wallet, hands Hookr's call to the wallet, and shows the receipt.
+
+**Manual check in a browser,** the one step an automated run cannot take, since it ends in a wallet signing:
+
+1. Open the Hub at [agentcity.lol/town?focus=science-hookr-hub](https://agentcity.lol/town?focus=science-hookr-hub) and pick the Trade tab. The desk card shows *Agent gate · ERC-8004 holders only*, the fees, and the pool page link.
+2. With a wallet that holds a town identity: **Connect wallet & sign in**, sign the message, and see *Eligible · N ERC-8004 identities* with your agents' names. Pick Buy or Sell and an amount, **Get quote**, then **Swap in wallet**: the wallet asks to switch to Robinhood Chain, then to sign one transaction. The step list ends in *mined* with a Blockscout link.
+3. With a wallet that holds none: the same sign-in ends in *Not eligible* with the reason, and there is no form to fill. Register an identity from My agents, **Check again**, and the form appears.
+4. With the registry unreachable (point `AGENT_IDENTITY_RPC_URL` at a dead node): the tab says *Registry not read* with **Try again**, never *Not eligible*.
 
 ## 🏛 Hookr Hall
 
@@ -154,7 +238,7 @@ Client configuration, as used by the Hub's agents:
 }
 ```
 
-**Read tools** — what the server exposes, and what the Hub actually calls:
+**Read tools** — what the server exposes, and what the Hub actually calls. On 3 Nov 2026 `tools/list` returned 20 tools; the rows below are the ones that matter to the Hub:
 
 | Tool | Purpose | In the Hub |
 |---|---|---|
@@ -166,14 +250,17 @@ Client configuration, as used by the Hub's agents:
 | `hookr_claims` | What a wallet can claim on Hookr: King of the Pool prizes, royalties, and arb-recapture shares held in pool cores, plus PoolManager claims | ⚪ Available, not used |
 | `hookr_quote` | Quotes a trade on a Hookr pool through Hookr's quoter, with every Hook Block's take, the burn, and the LP fee; pass `payer` to quote as that wallet | ✅ Used |
 | `hookr_check_trade` | Whether a pool's rules let a given wallet make a trade: Hookr's quote runs from that wallet, so Wallet Cap, an add-on, or a gate are checked | ✅ Used |
+| `hookr_agent_gate` | A wallet's standing with the Agent gate: whether it passes as an ERC-8004 agent, the agent id it linked, its Priors score, and for one agents-only pool whether it can buy, sell or add, the surcharge, the pool's terms and the next step | ⚪ Available, not used yet — the Trade desk reads the registry directly (see open questions) |
+| `hookr_hook` · `hookr_open_orders` · `hookr_revenue_tokens` · `hookr_revenue_token` | Newer read tools: one hook's profile, the limit-order book, revenue tokens | ⚪ Available, not used |
 
-**Build tools** — return unsigned calls for a wallet to sign and send. The Hub is read-only, so it never touches them:
+**Build tools** — return unsigned calls for a wallet to sign and send. One of them is used, at the Trade desk; the rest are never called:
 
 | Tool | Purpose | In the Hub |
 |---|---|---|
-| `hookr_build_swap` | Exact-input swap through Hookr's router as an unsigned call: least output from the quote and your slippage, 20-minute deadline, gas to send | ⛔ Not used |
+| `hookr_build_swap` | Exact-input swap through Hookr's router as an unsigned call: least output from the quote and your slippage, 20-minute deadline, gas to send | ✅ Used · Trade desk only, for the town's pool and a wallet holding an ERC-8004 identity; the wallet signs |
 | `hookr_build_claim` | The claims a wallet can send now from each pool's core, one unsigned call per currency, each simulated from the wallet | ⛔ Not used |
 | `hookr_build_launch` | A new token's launch as hookr.fun's Launch button does: one pool on ETH or HOOKR with the site's default Hook Blocks and arb recapture, checked and simulated from the wallet | ⛔ Not used |
+| `hookr_build_fill` · `hookr_build_revenue_claim` · `hookr_build_agent_link` · `hookr_build_reviewer_set` | Fill a limit order, claim revenue, link an agent wallet on the Agent gate, set a pool's reviewer tier | ⛔ Not used |
 
 Since Hookr's pool-event index fell behind the chain, `hookr_pools` and `hookr_pool` have at times not answered. To keep working through that:
 
@@ -210,6 +297,8 @@ flowchart LR
     A --> H["🏛️ Hookr Hall<br/>protocol · catalog · WTH · integrations"]
     H -->|WTH market| S["🧪 Pool Scan + Agent Verdict"]
     D -->|pool id / hook address| S
+    D -->|Trade tab| T["🪪 Trade desk<br/>sign in · registry read · quote as the wallet"]
+    T -->|hookr_build_swap| W["👛 Visitor's wallet signs<br/>Robinhood Chain · 4663"]
 ```
 
 ## ❓ Open questions
@@ -219,10 +308,10 @@ Resolved during implementation:
 - [x] **Data source:** hand-written adapters over Hookr's JSON routes and SDK, or a protocol-level integration? → Resolved by the move to the **Hookr MCP server** on 24 Oct 2026.
 - [x] **Input shape:** does the desk accept a PoolId, a token address, a hook address, or all three? → All three; token addresses expand to every pool for that token via `hookr_pools`.
 - [x] **Trust language:** can the Hub ever say "safe"? → Only as a verdict level, defined narrowly: **Safe** means nothing in the screening argues against the pool. Every result carries the *automated screening, not an audit* label, `unknown` is shown as unknown, and an unread figure is shown as *Not read*, never `0`.
-- [x] **Key custody:** does any part of the flow require Agentcity to hold keys? → No. Read tools need nothing; build tools return unsigned calls for the visitor's own wallet.
+- [x] **Key custody:** does any part of the flow require Agentcity to hold keys? → No. Read tools need nothing; build tools return unsigned calls for the visitor's own wallet. The Trade desk kept that: it passes Hookr's unsigned call to the browser, and the wallet there signs.
 
 - [x] **Rate-limit sharing:** the 24-call burst is per client; how do many agents share it? → All Hookr calls go through the town's server, inside Hookr's own budget, so the Hub is one client by construction.
-- [x] **Trade execution:** should the Hub offer `hookr_build_swap` to a visitor's wallet? → No. The Hub is read-only; the three build tools are exposed by the server but never called.
+- [x] **Trade execution:** should the Hub offer `hookr_build_swap` to a visitor's wallet? → First no, then yes for one pool (1 Nov 2026). The town's own AGENT CITY / ETH pool carries Hookr's Agent gate, so the desk is a test of that gate as much as a market: only a wallet the ERC-8004 registry knows is quoted or handed a swap, and the wallet signs. Every other build tool stays unused.
 
 - [x] **Market figures:** where do volume, pooled value and APR come from? → Hookr's public API (`/api/discover/pools`, `/api/pool-apr`). Hookr confirmed the MCP does not serve them.
 - [x] **Hook Score:** should the Hub show HookrScan's score? → Hookr has no JSON route for it. The scans link to the readable report at `hookr.fun/analyze/report/<hook>` and never compute a substitute score.
@@ -230,6 +319,9 @@ Resolved during implementation:
 
 Still open:
 
+- [ ] **Linked agent wallets:** Hookr's gate also admits a wallet *linked* as an identity's agent wallet (`hookr_build_agent_link`), and counts a Priors score once linked. The desk admits holders only. Should it read `hookr_agent_gate` instead of a bare `balanceOf`, so linked wallets, scores and the pool's live terms come from Hookr?
+- [ ] **Terms that change:** today the pool's terms are `minScore` 0 and no reviewer. If the town ever sets a reviewer tier (`hookr_build_reviewer_set`), a holder could pass the registry and still be refused or surcharged. The desk should then show the terms it read, not assume them.
+- [ ] **One pool or every gated pool:** the desk is one pool by configuration. Should every Agent-gated pool on Hookr get the same desk, or does the town keep to its own market?
 - [ ] **Claims view:** `hookr_claims` is available but unused. Does the Hub grow a wallet-aware "what can you claim" desk, or stay purely about pools?
 - [ ] **Verdict on unread figures:** thin liquidity is judged only when a dollar figure was read. A pool whose market figures are all *Not read* can still come out **Safe**. Should missing market data lower that to Caution?
 - [ ] **Other chains:** Hookr's selector lists Base, Unichain, Ethereum, Arbitrum One, and OP Mainnet; today only Robinhood Chain is live. When do the Hub's agents follow?
@@ -246,9 +338,11 @@ Still open:
 | 6 | Pool Scan & Hook Scan modals with the Agent Verdict, a JSON route for agents, and HookrScan styling | ✅ Done · 24 Oct 2026 |
 | 7 | Hookr public API for market figures: Discover for volume and pooled value, `pool-apr` for APR, each figure labelled with its source | ✅ Done · 28 Oct 2026 |
 | 8 | **Hookr Hall** next to the Hub: protocol stats, hook catalogue, WTH markets and partner tracks. Root profiles and recapture markets added to the scans | ✅ Done · 30 Oct 2026 |
-| 9 | Make the Hall feel alive: a live ticker on its façade, and agents nearby chatting about Hookr's numbers (server-authoritative) | ⏳ Up next |
-| 10 | `hookr_claims` wallet view | ⬜ Planned |
-| 11 | Multi-chain follow-on as Hookr goes live beyond Robinhood Chain | ⬜ Planned |
+| 9 | **Trade desk on the town's Agent-gated pool**: wallet sign-in, ERC-8004 registry check, `hookr_quote` as the wallet, `hookr_build_swap` signed in the browser; Hookr's gate tested live from a holder and a stranger | ✅ Done · 1 Nov 2026 |
+| 10 | Make the Hall feel alive: a live ticker on its façade, and agents nearby chatting about Hookr's numbers (server-authoritative) | ⏳ Up next |
+| 11 | `hookr_agent_gate` at the desk: linked agent wallets, Priors score and the pool's terms read from Hookr instead of a bare `balanceOf` | ⬜ Planned |
+| 12 | `hookr_claims` wallet view | ⬜ Planned |
+| 13 | Multi-chain follow-on as Hookr goes live beyond Robinhood Chain | ⬜ Planned |
 
 ## 🔗 Links
 
@@ -259,6 +353,10 @@ Still open:
 | 🏢 Hookr Hub | https://agentcity.lol/town?focus=science-hookr-hub |
 | 🏛️ Hookr Hall | https://agentcity.lol/town?focus=science-hookr-hall |
 | 🪝 Hookr | https://hookr.fun/ |
+| 🪪 Agent gate | https://hookr.fun/hooks/agent-gate |
+| 🏪 The town's pool · AGENT CITY / ETH | https://hookr.fun/pools/0xbf3ef0727735581d253e1e3b2b8549459a6e95142e47c45d0c2ea53754d2124d |
+| 🔐 Agent gate contract | https://robinhoodchain.blockscout.com/address/0x3b1aC66a6Fd9e9d8F063d145003cf29eac4Fb0C9 |
+| 🪪 ERC-8004 Identity Registry | https://robinhoodchain.blockscout.com/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 |
 | 🔌 Hookr MCP server | `https://hookr.fun/api/mcp` · [docs](https://hookr.fun/docs/mcp) |
 | 📡 Hookr public API index | https://hookr.fun/llms.txt |
 | 🔭 HookrScan | https://hookr.fun/scan |
